@@ -30,7 +30,7 @@ class Triplets:
                 random.shuffle(types)
                 path = os.path.join(root, name)
                 for i in range(len(types)):
-                    runs[i].append([os.path.join(self.root[3:],name,'base'+'.bmp'),(os.path.join(self.root[3:],name,types[i]+'.bmp'))])
+                    runs[i].append([os.path.join(self.root[3:],name,'base'+'.bmp'),(os.path.join(self.root[3:],name,types[i]+'.bmp')),'',''])
 
 
 t = Triplets(os.path.join('..','stimuli','Triplets'))
@@ -41,14 +41,21 @@ t.splitToRuns(runs)
 z2.splitToRuns(runs)
 z3.splitToRuns(runs)
 for run in runs:
+    random.shuffle(run)
     for i in range(len(run)/5):
-        word = sum(run,[])[random.randrange(len(run))]
-        run.insert((5*(i+1))-random.randrange(4)+i,[word])
+        word = ''
+        while word=='':
+            flat_run =  sum(run,[])
+            index = random.randrange(len(flat_run))
+            word = flat_run[index]
+        index = (5*(i+1))-random.randrange(3)+i
+        print index
+        run.insert(index,[word,'','',''])
+        # run.insert((5*(i+1))-random.randrange(3)+2,[word,None,None,None])
 for i in range(len(runs)):
-    random.shuffle(runs)
     file = open('run'+str(i+1)+'.csv', 'wb')
     header = ['stim1','stim2','stim3','stim4']
-    wr = csv.writer(file, quoting=csv.QUOTE_ALL)
+    wr = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
     wr.writerow(header)
     wr.writerows(runs[i])
     print runs[i]
