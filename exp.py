@@ -28,7 +28,7 @@ expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 runNumber = int(expInfo['runNumber'])
 # Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
-filename = _thisDir + os.sep + 'data/%s_%s_%s' %(expInfo['participant'], expName, expInfo['date'])
+filename = _thisDir + os.sep + 'data/%s_run%i_%s' %(expInfo['participant'], runNumber, expInfo['date'])
 
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
@@ -214,9 +214,9 @@ for thisTrial in trials:
     # update component parameters for each repeat
 
     image.setImage(stim1)
-    if(stim2 != "" and stim2 != False):
+    if(stim2 != '' and stim2 != False):
         image_2.setImage(stim2)
-    if(stim3!="" and stim3 != False):
+    if(stim3!='' and stim3 != False):
         image_3.setImage(stim3)
         image_4.setImage(stim4)
         
@@ -227,9 +227,11 @@ for thisTrial in trials:
     trialComponents.append(image_2)
     trialComponents.append(image_3)
     trialComponents.append(image_4)
-    
+    trialComponents.append(memory_inst)
+
     key_resp_2 = event.BuilderKeyResponse()  # create an object of type KeyResponse
     key_resp_2.status = NOT_STARTED
+    trialComponents.append(key_resp_2)
     for thisComponent in trialComponents:
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
@@ -241,7 +243,7 @@ for thisTrial in trials:
         t = trialClock.getTime()
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
         # update/draw components on each frame
-        if (stim2=="" or stim2 == False):
+        if (stim2=='' or stim2 == False):
             # *image* updates
             if t >= 8.0 and image.status == NOT_STARTED:
                 # keep track of start time/frame for later
@@ -268,8 +270,11 @@ for thisTrial in trials:
                 key_resp_2.status = STOPPED
             if key_resp_2.status == STARTED:
                 theseKeys = event.getKeys(keyList=['y', 'n', 'left', 'right', 'space'])
+                if len(theseKeys) > 0:  # at least one key was pressed
+                    key_resp_2.keys.extend(theseKeys)  # storing all keys
+                    key_resp_2.rt.append(key_resp_2.clock.getTime())
                 
-        elif (stim3=="" or stim3 == False):
+        elif (stim3=='' or stim3 == False):
             # *image* updates
             if t >= 8.0 and image.status == NOT_STARTED:
                 # keep track of start time/frame for later
@@ -327,6 +332,7 @@ for thisTrial in trials:
         
         # *ISI* period
         if t >= 0.0 and ISI.status == NOT_STARTED:
+            thisExp.addData("start",globalClock.getTime())
             # keep track of start time/frame for later
             ISI.tStart = t  # underestimates by a little under one frame
             ISI.frameNStart = frameN  # exact frame index
@@ -353,6 +359,13 @@ for thisTrial in trials:
             win.flip()
     
     #-------Ending Routine "trial"-------
+    # check responses
+    if key_resp_2.keys in ['', [], None]:  # No response was made
+        key_resp_2.keys=None
+    # store data for thisExp (ExperimentHandler)
+    thisExp.addData('keys',key_resp_2.keys)
+    if key_resp_2.keys != None:  # we had a response
+        thisExp.addData('rt', key_resp_2.rt)
     for thisComponent in trialComponents:
         if hasattr(thisComponent, "setAutoDraw"):
             thisComponent.setAutoDraw(False)
