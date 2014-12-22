@@ -69,28 +69,28 @@ trialClock = core.Clock()
 ISI = core.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='ISI')
 image = visual.ImageStim(win=win, name='image',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[0.5, 0.5],
+    ori=0, pos=[0, 0], size=[0.4, 0.2],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
-    texRes=128, interpolate=True, depth=-1.0)
+    interpolate=True, depth=-1.0)
 image_2 = visual.ImageStim(win=win, name='image_2',
     image='sin', mask=None,
-    ori=0, pos=[0,0], size=[0.5, 0.5],
+    ori=0, pos=[0,0], size=[0.4, 0.2],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
-    texRes=128, interpolate=True, depth=-2.0)
+    interpolate=True, depth=-2.0)
 image_3 = visual.ImageStim(win=win, name='image_3',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[0.5, 0.5],
+    ori=0, pos=[0, 0], size=[0.4, 0.2],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
-    texRes=128, interpolate=True, depth=-3.0)
+    interpolate=True, depth=-3.0)
 image_4 = visual.ImageStim(win=win, name='image_4',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[0.5, 0.5],
+    ori=0, pos=[0, 0], size=[0.4, 0.2],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
-    texRes=128, interpolate=True, depth=-4.0)
+    interpolate=True, depth=-4.0)
 memory_inst = visual.ImageStim(win=win, name='memory_inst',
     image='stimuli\\memory_inst.bmp', mask=None,
     ori=0, pos=[0, 0.5],
