@@ -1,0 +1,21 @@
+open questions
+- Localizer: 	- only words?
+				- only non-words?
+				- half/half
+				
+				- I think we can decide on MVPA
+				- Talk to Roy about the design
+				- Is using a made-up language enough?
+-Main Exp
+	- Is there any significance to letter frequencies in all stimuli?
+		- RW
+				- 5 letters
+				- Not the same morphologically
+	- What is used as an input device?
+	
+- AD Analysis   - If were showing words with different structure 
+					do we have to analyse the pairs in relation to one another?
+				- What is our baseline?
+				- 
+
+				
