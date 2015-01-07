@@ -16,11 +16,22 @@ from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
 
 # Ensure that relative paths start from the same directory as this script
+CONFIGURATION_FILE = u'Scripts\\run%d.csv'
+END_TRIAL_DELAY = 20
+RESPONSE_KEY = 'b'
+BEGIN_TRIAL_DELAY = 2.0#24.0
+BLOCK_DURATION = 12.0
+IMAGE4_TIME = 11.0
+IMAGE3_TIME = 10.0
+IMAGE2_TIME = 9.0
+IMAGE_DURATION = 0.8
+IMAGE1_TIME = 8.0
+REFRESH_RATE = 60
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(_thisDir)
 
 # Store info about the experiment 
-expName = u'exp'  # from the Builder filename that created this script
+expName = u'MVPA'  # from the Builder filename that created this script
 expInfo = {'participant':'', 'runNumber':'1'}
 dlg = gui.DlgFromDict(dictionary=expInfo, title=expName)
 if dlg.OK == False: core.quit()  # user pressed cancel
@@ -40,24 +51,16 @@ thisExp = data.ExperimentHandler(name=expName, version='',
 logFile = logging.LogFile(filename+'.log', level=logging.EXP)
 logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a file
 
-endExpNow = False  # flag for 'escape' or other condition => quit the exp
-
-# Start Code - component code to be run before the window creation
-
 # Setup the Window
 win = visual.Window(size=(1440, 900), fullscr=True, screen=0, allowGUI=False, allowStencil=False,
     monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
     blendMode='avg', useFBO=True, units='deg'
     )
 # store frame rate of monitor if we can measure it successfully
-expInfo['frameRate']= 60#win.getActualFrameRate()
-if expInfo['frameRate']!=None:
-    frameDur = 1.0/round(expInfo['frameRate'])
-else:
-    frameDur = 1.0/60.0 # couldn't get a reliable measure so guess
+if(REFRESH_RATE==None):
+    REFRESH_RATE = win.getActualFrameRate()
+expInfo['frameRate']= REFRESH_RATE#win.getActualFrameRate()
 
-# Initialize components for Routine "inst"
-instClock = core.Clock()
 text = visual.TextStim(win=win, ori=0, name='text',
     text=u'The experiment will begin shortly',    font=u'Arial',
     pos=[0, 0], height=1, wrapWidth=None,
@@ -66,7 +69,6 @@ text = visual.TextStim(win=win, ori=0, name='text',
 
 # Initialize components for Routine "trial"
 trialClock = core.Clock()
-ISI = core.StaticPeriod(win=win, screenHz=expInfo['frameRate'], name='ISI')
 image = visual.ImageStim(win=win, name='image',
     image='sin', mask=None,
     ori=0, pos=[0, 0], size=[8, 4],
@@ -78,53 +80,29 @@ image_2 = visual.ImageStim(win=win, name='image_2',
     ori=0, pos=[0,0], size=[8, 4],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
-    interpolate=True, depth=-2.0)
+    interpolate=True, depth=-1.0)
 image_3 = visual.ImageStim(win=win, name='image_3',
     image='sin', mask=None,
     ori=0, pos=[0, 0], size=[8, 4],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
-    interpolate=True, depth=-3.0)
+    interpolate=True, depth=-1.0)
 image_4 = visual.ImageStim(win=win, name='image_4',
     image='sin', mask=None,
     ori=0, pos=[0, 0], size=[8, 4],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
-    interpolate=True, depth=-4.0)
-memory_inst = visual.ImageStim(win=win, name='memory_inst',
-    image='stimuli\\memory_inst.bmp', mask=None,
-    ori=0, pos=[0, 4],
-    color=[1,1,1], colorSpace='rgb', opacity=1,
-    flipHoriz=False, flipVert=False,
-    texRes=128, interpolate=True, depth=0.0)
+    interpolate=True, depth=-1.0)
 # Create some handy timers
 globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine 
 logging.setDefaultClock(globalClock)
 #------Prepare to start Routine "inst"-------
-t = 0
-instClock.reset()  # clock 
-frameN = -1
-# update component parameters for each repeat
-scan_t = event.BuilderKeyResponse()  # create an object of type KeyResponse
-scan_t.status = NOT_STARTED
-# keep track of which components have finished
-instComponents = []
-instComponents.append(text)
-instComponents.append(scan_t)
-for thisComponent in instComponents:
-    if hasattr(thisComponent, 'status'):
-        thisComponent.status = NOT_STARTED
 trials = data.TrialHandler(nReps=1, method='sequential',
     extraInfo=expInfo, originPath=None,
-    trialList=data.importConditions(u'Scripts\\run%d.csv' % runNumber),
+    trialList=data.importConditions(CONFIGURATION_FILE % runNumber),
     name='trials')
 thisExp.addLoop(trials)  # add the loop to the experiment
-  # so we can initialise stimuli with some values
-#-------Start Routine "inst"-------
-continueRoutine = True
-
-
 # set up handler to look after randomisation of conditions etc
 text.setAutoDraw(True)
 win.flip()
@@ -132,7 +110,7 @@ keys = event.getKeys(keyList=['T','t','escape'])
 event.waitKeys(['return'])
 globalClock.reset()
 routineTimer.reset()
-routineTimer.add(24.000000)
+routineTimer.add(BEGIN_TRIAL_DELAY)
 text.setAutoDraw(False)
 win.flip()
 if('escape' in keys):
@@ -140,19 +118,6 @@ if('escape' in keys):
 while routineTimer.getTime() > 0:
     continue
 for thisTrial in trials:
-    currentLoop = trials
-    # abbreviate parameter names if possible (e.g. rgb = thisTrial.rgb)
-
-    
-    #------Prepare to start Routine "trial"-------
-    t = 0
-    trialClock.reset()  # clock
-    frameN = -1
-    routineTimer.add(12.000000)
-    # update component parameters for each repeat
-
-
-    # keep track of which components have finished
     trialComponents = []
     trialComponents.append(ISI)
     trialComponents.append(image)
@@ -160,81 +125,75 @@ for thisTrial in trials:
     trialComponents.append(image_3)
     trialComponents.append(image_4)
     trialComponents.append(memory_inst)
-    key_resp_2 = event.BuilderKeyResponse()  # create an object of type KeyResponse
-    key_resp_2.status = NOT_STARTED
-    trialComponents.append(key_resp_2)
     for thisComponent in trialComponents:
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
 
-
-    
+    t = 0
+    trialClock.reset()  # clock
+    frameN = -1
+    routineTimer.add(BLOCK_DURATION)
     #-------Start Routine "trial"-------
     continueRoutine = True
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
         t = trialClock.getTime()
         frameN = frameN + 1  # number of completed frames (so 0 is the first frame)
-        # update/draw components on each frame
-        # *image* updates
         # *ISI* period
         if t >= 0.0 and ISI.status == NOT_STARTED:
             thisExp.addData("start",globalClock.getTime())
-            thisTrial = trials.trialList[0]
-            # keep track of start time/frame for later
-            # ISI.tStart = t  # underestimates by a little under one frame
-            # ISI.frameNStart = frameN  # exact frame index
-            # ISI.start(8.0)
             ISI.status = STARTED
             if thisTrial != None:
                 for paramName in thisTrial.keys():
                     exec(paramName + '= thisTrial.' + paramName)
             image.setImage(stim1)
+            image.pos = (0,randint(-1,1)*0.5)
             if (stim2 != '' and stim2 != False):
                 image_2.setImage(stim2)
+                image_2.pos = (0,randint(-1,1)*0.5)
             if (stim3 != '' and stim3 != False):
                 image_3.setImage(stim3)
+                image_3.pos = (0,randint(-1,1)*0.5)
                 image_4.setImage(stim4)
+                image_4.pos = (0,randint(-1,1)*0.5)
 
 
-        if t >= 8.0 and image.status == NOT_STARTED:
+        if t >= IMAGE1_TIME and image.status == NOT_STARTED:
             thisExp.addData("start stim",globalClock.getTime())
             # keep track of start time/frame for later
             image.tStart = t  # underestimates by a little under one frame
             image.frameNStart = frameN  # exact frame index
             image.setAutoDraw(True)
-        elif image.status == STARTED and t >= (8.0 + (0.8-win.monitorFramePeriod*0.75)): #most of one frame period left
+        elif image.status == STARTED and t >= (IMAGE1_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
             image.setAutoDraw(False)
 
             # *image_2* updates
-        elif t >= 9.0 and image_2.status == NOT_STARTED:
+        elif t >= IMAGE2_TIME and image_2.status == NOT_STARTED:
             # keep track of start time/frame for later
             image_2.tStart = t  # underestimates by a little under one frame
             image_2.frameNStart = frameN  # exact frame index
             image_2.setAutoDraw(True)
-        elif image_2.status == STARTED and t >= (9.0 + (0.8-win.monitorFramePeriod*0.75)): #most of one frame period left
+        elif image_2.status == STARTED and t >= (IMAGE2_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
             image_2.setAutoDraw(False)
 
         # *image_3* updates
-        elif t >= 10.0 and image_3.status == NOT_STARTED:
+        elif t >= IMAGE3_TIME and image_3.status == NOT_STARTED:
             # keep track of start time/frame for later
             image_3.tStart = t  # underestimates by a little under one frame
             image_3.frameNStart = frameN  # exact frame index
             image_3.setAutoDraw(True)
-        elif image_3.status == STARTED and t >= (10.0 + (0.8-win.monitorFramePeriod*0.75)): #most of one frame period left
+        elif image_3.status == STARTED and t >= (IMAGE3_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
             image_3.setAutoDraw(False)
 
         # *image_4* updates
-        elif t >= 11.0 and image_4.status == NOT_STARTED:
+        elif t >= IMAGE4_TIME and image_4.status == NOT_STARTED:
             # keep track of start time/frame for later
             image_4.tStart = t  # underestimates by a little under one frame
             image_4.frameNStart = frameN  # exact frame index
             image_4.setAutoDraw(True)
-        elif image_4.status == STARTED and t >= (11.0 + (0.8-win.monitorFramePeriod*0.75)): #most of one frame period left
+        elif image_4.status == STARTED and t >= (IMAGE4_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
             image_4.setAutoDraw(False)
 
-
-        # check if all components have finished
         if not continueRoutine:  # a component has requested a forced-end of Routine
             routineTimer.reset()  # if we abort early the non-slip timer needs reset
             break
@@ -243,9 +202,12 @@ for thisTrial in trials:
             if hasattr(thisComponent, "status") and thisComponent.status != FINISHED:
                 continueRoutine = True
                 break  # at least one component has not yet finished
-            
+
+        if event.getKeys(keyList=[RESPONSE_KEY]):
+            thisExp.addData("keyPressed","b")
+            thisExp.addData("keyRT",trialClock.getTime())
         # check for quit (the Esc key)
-        if endExpNow or event.getKeys(keyList=["escape"]):
+        if event.getKeys(keyList=["escape"]):
             core.quit()
             
         # refresh the screen
@@ -253,18 +215,7 @@ for thisTrial in trials:
             win.flip()
     
     #-------Ending Routine "trial"-------
-    # check responses
-    if key_resp_2.keys in ['', [], None]:  # No response was made
-        key_resp_2.keys=None
-    # store data for thisExp (ExperimentHandler)
-    thisExp.addData('keys',key_resp_2.keys)
-    if key_resp_2.keys != None:  # we had a response
-        thisExp.addData('rt', key_resp_2.rt)
-    for thisComponent in trialComponents:
-        if hasattr(thisComponent, "setAutoDraw"):
-            thisComponent.setAutoDraw(False)
     thisExp.nextEntry()
-print event.getKeys()
-core.wait(20)
+core.wait(END_TRIAL_DELAY)
 win.close()
 core.quit()
