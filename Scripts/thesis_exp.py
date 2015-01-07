@@ -3,21 +3,31 @@ import os, random, cPickle
 import csv
 os.chdir(os.path.dirname(__file__))
 
-NO_OF_RUNS = 3
+NO_OF_RUNS = 2
 class PWBlocks:
-    def __init__(self, path,block_len):
+    def __init__(self, path,second_path,block_len):
         self.block_len = block_len
         self.root = path
+        self.second_root = second_path
 
     def splitToRuns(self,runs=[]):
         random.shuffle(runs)
+        all_blocks = []
         for root, dirs, files in os.walk(self.root, topdown=False):
             random.shuffle(files)
+
             for j in range(len(files)/self.block_len):
-                names = []
+                names1 = []
+                names2 = []
                 for i in range(self.block_len):
-                    names.append(os.path.join(self.root[3:],files.pop()))
-                runs[j%len(runs)].append(names)
+                    file_name = files.pop()
+                    names1.append(os.path.join(self.root[3:],file_name))
+                    names2.append(os.path.join(self.second_root[3:],file_name))
+                all_blocks.append(names1)
+                all_blocks.append(names2)
+        random.shuffle(all_blocks)
+        runs[0] = runs[0]+ all_blocks[:len(all_blocks)/2]
+        runs[1] = runs[1]+ all_blocks[len(all_blocks)/2:]
 
 
 class Triplets:
@@ -32,14 +42,14 @@ class Triplets:
                 for i in range(len(types)):
                     runs[i].append([os.path.join(self.root[3:],name,'base'+'.bmp'),(os.path.join(self.root[3:],name,types[i]+'.bmp')),'',''])
 
-
-t = Triplets(os.path.join('..','stimuli','Triplets'))
-z2 = PWBlocks(os.path.join('..','stimuli','Z2'),4)
-z3 = PWBlocks(os.path.join('..','stimuli','Z3'),4)
-runs = [[],[],[]]
-t.splitToRuns(runs)
+print os.path.dirname(__file__)
+#t = Triplets(os.path.join('..','stimuli','Triplets'))
+z2 = PWBlocks(os.path.join('..','stimuli','Z2'),os.path.join('..','stimuli','Z3'),4)
+#z3 = PWBlocks(os.path.join('..','stimuli','Z3'),os.path.join('..','stimuli','Z3'),4)
+runs = [[],[]]
+#t.splitToRuns(runs)
 z2.splitToRuns(runs)
-z3.splitToRuns(runs)
+#z3.splitToRuns(runs)
 for run in runs:
     random.shuffle(run)
     for i in range(len(run)/5):
