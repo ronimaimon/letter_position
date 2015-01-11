@@ -8,15 +8,18 @@ If you publish work using this script please cite the relevant PsychoPy publicat
 """
 
 from __future__ import division  # so that 1/3=0.333 instead of 1/3=0
-from psychopy import visual, core, data, event, logging, gui
+from psychopy import visual, core, data, event, logging, gui,monitors
 from psychopy.constants import *  # things like STARTED, FINISHED
 import numpy as np  # whole numpy lib is available, prepend 'np.'
 from numpy import sin, cos, tan, log, log10, pi, average, sqrt, std, deg2rad, rad2deg, linspace, asarray
 from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
 
-# Ensure that relative paths start from the same directory as this script
-CONFIGURATION_FILE = u'Scripts\\run%d.csv'
+STIMULI_SIZE = [16, 4]
+SCREEN_WIDTH_IN_CM = 29.5
+SCREEN_DISTANCE_IN_CM = 50
+SCREEN_RESOLUTION = (1440, 900)
+CONFIGURATION_FILE = u'Scripts\\exp1-run%d.csv'
 END_TRIAL_DELAY = 20
 RESPONSE_KEY = 'b'
 BLOCK_DURATION = 12.0
@@ -26,6 +29,7 @@ IMAGE2_TIME = 9.0
 IMAGE_DURATION = 0.8
 IMAGE1_TIME = 8.0
 REFRESH_RATE = 60
+# Ensure that relative paths start from the same directory as this script
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(_thisDir)
 
@@ -38,7 +42,7 @@ expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 runNumber = int(expInfo['runNumber'])
 # Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
-filename = _thisDir + os.sep + 'data/%s_run%i_%s' %(expInfo['participant'], runNumber, expInfo['date'])
+filename = _thisDir + os.sep + 'data/%s_%s_run%i_%s' %(expInfo['participant'],expName, runNumber, expInfo['date'])
 
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
@@ -49,10 +53,11 @@ thisExp = data.ExperimentHandler(name=expName, version='',
 #save a log file for detail verbose info
 logFile = logging.LogFile(filename+'.log', level=logging.EXP)
 logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a file
-
 # Setup the Window
-win = visual.Window(size=(1440, 900), fullscr=True, screen=0, allowGUI=False, allowStencil=False,
-    monitor='testMonitor', color=[0,0,0], colorSpace='rgb',
+mon = monitors.Monitor(name='my-monitor',distance=SCREEN_DISTANCE_IN_CM,width=SCREEN_WIDTH_IN_CM)
+mon.setSizePix(SCREEN_RESOLUTION)
+win = visual.Window(fullscr=True, screen=0, allowGUI=False, allowStencil=False,
+    monitor=mon, color=[0,0,0], colorSpace='rgb',
     blendMode='avg', useFBO=True, units='deg'
     )
 # store frame rate of monitor if we can measure it successfully
@@ -73,32 +78,28 @@ fixation = visual.TextStim(win=win, ori=0, name='text',
     pos=[0, 0], height=1, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
-visual.TextStim(win=win, ori=0, name='text',
-    text=u'The experiment will begin shortly',    font=u'Arial',
-    pos=[0, 0], height=1, wrapWidth=None,
-    color=u'white', colorSpace='rgb', opacity=1,
-    depth=0.0)
+
 image = visual.ImageStim(win=win, name='image',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[8, 4],
+    ori=0, pos=[0, 0], size=STIMULI_SIZE,
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
 image_2 = visual.ImageStim(win=win, name='image_2',
     image='sin', mask=None,
-    ori=0, pos=[0,0], size=[8, 4],
+    ori=0, pos=[0,0], size=STIMULI_SIZE,
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
 image_3 = visual.ImageStim(win=win, name='image_3',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[8, 4],
+    ori=0, pos=[0, 0], size=STIMULI_SIZE,
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
 image_4 = visual.ImageStim(win=win, name='image_4',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[8, 4],
+    ori=0, pos=[0, 0], size=STIMULI_SIZE,
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
