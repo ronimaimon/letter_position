@@ -42,6 +42,30 @@ class Triplets:
                 for i in range(len(types)):
                     runs[i].append([os.path.join(self.root[3:],name,'base'+'.bmp'),(os.path.join(self.root[3:],name,types[i]+'.bmp')),'',''])
 
+class LocalizerBlocks:
+    def __init__(self, path,second_path,block_len):
+        self.block_len = block_len
+        self.root = path
+        self.second_root = second_path
+
+    def getRun(self):
+        random.shuffle(runs)
+        all_blocks = []
+        for root, dirs, files in os.walk(self.root, topdown=False):
+            random.shuffle(files)
+            for j in range(len(files)/self.block_len):
+                names1 = []
+                names2 = []
+                for i in range(self.block_len):
+                    file_name = files.pop()
+                    names1.append(os.path.join(self.root[3:],file_name))
+                    names2.append(os.path.join(self.second_root[3:],file_name))
+                all_blocks.append(names1)
+                all_blocks.append(names2)
+        random.shuffle(all_blocks)
+        return all_blocks
+
+
 def generateMVPARuns():
     global z2, runs, run, i, index, catch_trial, flat_run, word, word2, word3, loc, file, header, wr
     z2 = PWBlocks(os.path.join('..', 'stimuli', 'Z2'), os.path.join('..', 'stimuli', 'Z3'), 4)
@@ -73,7 +97,22 @@ def generateMVPARuns():
         wr.writerows(runs[i])
         print runs[i]
 
+
+def generateLocalizerRun():
+    global loc, run, file, header, wr
+    loc = LocalizerBlocks(os.path.join('..', 'stimuli', 'FF'), os.path.join('..', 'stimuli', 'W'), 12)
+    run = loc.getRun()
+    file = open('loc.csv', 'wb')
+    header = ['stim1', 'stim2', 'stim3', 'stim4', 'stim5', 'stim6', 'stim7', 'stim8', 'stim9', 'stim10', 'stim11',
+              'stim12']
+    wr = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
+    wr.writerow(header)
+    wr.writerows(run)
+
+
+
 print os.path.dirname(__file__)
 generateMVPARuns()
-t = Triplets(os.path.join('..','stimuli','Triplets'))
-t.splitToRuns(runs)
+generateLocalizerRun()
+# t = Triplets(os.path.join('..','stimuli','Triplets'))
+# t.splitToRuns(runs)
