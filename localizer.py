@@ -22,6 +22,7 @@ SCREEN_DISTANCE_IN_CM = 50
 SCREEN_RESOLUTION = (1440, 900)
 CONFIGURATION_FILE = u'Scripts\\loc.csv'
 END_TRIAL_DELAY = 20
+BEGIN_TRIAL_DELAY = 20
 RESPONSE_KEY = 'b'
 BLOCK_DURATION = 24.0
 IMAGE12_TIME = 23.0
@@ -84,11 +85,6 @@ text = visual.TextStim(win=win, ori=0, name='text',
     depth=0.0)
 fixation = visual.TextStim(win=win, ori=0, name='text',
     text='+',    font=u'Arial',
-    pos=[0, 0], height=1, wrapWidth=None,
-    color=u'white', colorSpace='rgb', opacity=1,
-    depth=0.0)
-visual.TextStim(win=win, ori=0, name='text',
-    text=u'The experiment will begin shortly',    font=u'Arial',
     pos=[0, 0], height=1, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
@@ -171,7 +167,7 @@ logging.setDefaultClock(globalClock)
 #------Prepare to start Routine "inst"-------
 trials = data.TrialHandler(nReps=1, method='sequential',
     extraInfo=expInfo, originPath=None,
-    trialList=data.importConditions(CONFIGURATION_FILE % runNumber),
+    trialList=data.importConditions(CONFIGURATION_FILE),
     name='trials')
 thisExp.addLoop(trials)  # add the loop to the experiment
 # set up handler to look after randomisation of conditions etc
@@ -181,19 +177,27 @@ keys = event.getKeys(keyList=['T','t','escape'])
 event.waitKeys(['return'])
 globalClock.reset()
 routineTimer.reset()
-# routineTimer.add(BEGIN_TRIAL_DELAY)
+routineTimer.add(BEGIN_TRIAL_DELAY)
 text.setAutoDraw(False)
 win.flip()
 if('escape' in keys):
     core.quit()
-# while routineTimer.getTime() > 0:
-#     continue
+while routineTimer.getTime() > 0:
+    continue
 for thisTrial in trials:
     trialComponents = []
     trialComponents.append(image)
     trialComponents.append(image_2)
     trialComponents.append(image_3)
     trialComponents.append(image_4)
+    trialComponents.append(image_5)
+    trialComponents.append(image_6)
+    trialComponents.append(image_7)
+    trialComponents.append(image_8)
+    trialComponents.append(image_9)
+    trialComponents.append(image_10)
+    trialComponents.append(image_11)
+    trialComponents.append(image_12)
     for thisComponent in trialComponents:
         if hasattr(thisComponent, 'status'):
             thisComponent.status = NOT_STARTED
@@ -288,6 +292,34 @@ for thisTrial in trials:
             image_8.setAutoDraw(True)
         elif image_8.status == STARTED and t >= (IMAGE8_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
             image_8.setAutoDraw(False)
+        
+        elif t >= IMAGE9_TIME and image_9.status == NOT_STARTED:
+            # keep track of start time/frame for later
+            image_9.tStart = t  # underestimates by a little under one frame
+            image_9.setAutoDraw(True)
+        elif image_9.status == STARTED and t >= (IMAGE9_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
+            image_9.setAutoDraw(False)
+            
+        elif t >= IMAGE10_TIME and image_10.status == NOT_STARTED:
+            # keep track of start time/frame for later
+            image_10.tStart = t  # underestimates by a little under one frame
+            image_10.setAutoDraw(True)
+        elif image_10.status == STARTED and t >= (IMAGE10_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
+            image_10.setAutoDraw(False)
+            
+        elif t >= IMAGE11_TIME and image_11.status == NOT_STARTED:
+            # keep track of start time/frame for later
+            image_11.tStart = t  # underestimates by a little under one frame
+            image_11.setAutoDraw(True)
+        elif image_11.status == STARTED and t >= (IMAGE11_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
+            image_11.setAutoDraw(False)
+            
+        elif t >= IMAGE12_TIME and image_12.status == NOT_STARTED:
+            # keep track of start time/frame for later
+            image_12.tStart = t  # underestimates by a little under one frame
+            image_12.setAutoDraw(True)
+        elif image_12.status == STARTED and t >= (IMAGE12_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
+            image_12.setAutoDraw(False)
 
         if not continueRoutine:  # a component has requested a forced-end of Routine
             routineTimer.reset()  # if we abort early the non-slip timer needs reset
