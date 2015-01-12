@@ -21,11 +21,12 @@ SCREEN_DISTANCE_IN_CM = 50
 SCREEN_RESOLUTION = (1440, 900)
 CONFIGURATION_FILE = u'Scripts\\exp2-run%d.csv'
 END_TRIAL_DELAY = 20
+BEGIN_TRIAL_DELAY = 20
 RESPONSE_KEY = 'b'
 BLOCK_DURATION = 4.0
-IMAGE2_TIME = 3.7
+IMAGE2_TIME = 0.7
 IMAGE_DURATION = 0.3
-IMAGE1_TIME = 3.0
+IMAGE1_TIME = 0
 REFRESH_RATE = 60
 _thisDir = os.path.dirname(os.path.abspath(__file__))
 os.chdir(_thisDir)
@@ -103,40 +104,89 @@ trials = data.TrialHandler(nReps=1, method='sequential',
     name='trials')
 thisExp.addLoop(trials)  # add the loop to the experiment
 # set up handler to look after randomisation of conditions etc
-text.setAutoDraw(True)
-win.flip()
-keys = event.getKeys(keyList=['T','t','escape'])
-event.waitKeys(['return'])
-globalClock.reset()
-routineTimer.reset()
-# routineTimer.add(BEGIN_TRIAL_DELAY)
-text.setAutoDraw(False)
-win.flip()
-if('escape' in keys):
-    core.quit()
 # while routineTimer.getTime() > 0:
 #     continue
+firstTrial = True
 for thisTrial in trials:
+    if(firstTrial):
+        firstTrial = False
+        if thisTrial != None:
+            for paramName in thisTrial.keys():
+                exec (paramName + '= thisTrial.' + paramName)
+            image.setImage(stim1)
+            image.pos = (0, randint(-1, 1) * 0.5)
+            image_2.setImage(stim2)
+            image_2.pos = (0, randint(-1, 1) * 0.5)
+        text.setAutoDraw(True)
+        win.flip()
+        keys = event.getKeys(keyList=['T','t','escape'])
+        event.waitKeys(['return'])
+        globalClock.reset()
+        routineTimer.reset()
+        routineTimer.add(BEGIN_TRIAL_DELAY)
+        text.setAutoDraw(False)
+        win.flip()
+        if('escape' in keys):
+            core.quit()
+
     trialComponents = []
+    trialComponents.append(fixation)
     trialComponents.append(image)
     trialComponents.append(image_2)
     for thisComponent in trialComponents:
-        if hasattr(thisComponent, 'status'):
-            thisComponent.status = NOT_STARTED
+        thisComponent.status = NOT_STARTED
 
     t = 0
-    trialClock.reset()  # clock
-    routineTimer.add(BLOCK_DURATION)
     #-------Start Routine "trial"-------
     continueRoutine = True
     isFirstFrame = True
+    while routineTimer.getTime() > 0:
+        continue
+    trialClock.reset()  # clock
+    routineTimer.add(BLOCK_DURATION)
     while continueRoutine and routineTimer.getTime() > 0:
         # get current time
         t = trialClock.getTime()
         # *ISI* period
-        if isFirstFrame and t >= 0.0:
+        if t >= 1.4 and fixation.status == NOT_STARTED:
             thisExp.addData("start",globalClock.getTime())
             fixation.setAutoDraw(True)
+            win.flip()
+
+        if t >= IMAGE1_TIME and image.status == NOT_STARTED:
+            thisExp.addData("start stim",globalClock.getTime())
+            # keep track of start time/frame for later
+            image.tStart = t  # underestimates by a little under one frame
+            image.setAutoDraw(True)
+            win.flip()
+        elif image.status == STARTED and t >= (IMAGE1_TIME + (IMAGE_DURATION)): #most of one frame period left
+            image.setAutoDraw(False)
+            win.flip()
+
+            # *image_2* updates
+        elif t >= IMAGE2_TIME and image_2.status == NOT_STARTED:
+            # keep track of start time/frame for later
+            image_2.tStart = t  # underestimates by a little under one frame
+            image_2.setAutoDraw(True)
+            win.flip()
+        elif image_2.status == STARTED and t >= (IMAGE2_TIME + (IMAGE_DURATION)): #most of one frame period left
+            image_2.setAutoDraw(False)
+            win.flip()
+
+        # refresh the screen
+        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+            win.flip()
+        else:
+            routineTimer.reset()  # if we abort early the non-slip timer needs reset
+            break
+
+        if event.getKeys(keyList=[RESPONSE_KEY]):
+            thisExp.addData("keyPressed",RESPONSE_KEY)
+            thisExp.addData("keyRT",trialClock.getTime())
+        # check for quit (the Esc key)
+        if event.getKeys(keyList=["escape"]):
+            core.quit()
+        if isFirstFrame and fixation.status == STARTED:
             isFirstFrame = False
             if thisTrial != None:
                 for paramName in thisTrial.keys():
@@ -148,42 +198,9 @@ for thisTrial in trials:
                 image_2.pos = (0,randint(-1,1)*0.5)
 
 
-        if t >= IMAGE1_TIME and image.status == NOT_STARTED:
-            thisExp.addData("start stim",globalClock.getTime())
-            # keep track of start time/frame for later
-            image.tStart = t  # underestimates by a little under one frame
-            fixation.setAutoDraw(False)
-            image.setAutoDraw(True)
-        elif image.status == STARTED and t >= (IMAGE1_TIME + (IMAGE_DURATION)): #most of one frame period left
-            image.setAutoDraw(False)
-
-            # *image_2* updates
-        elif t >= IMAGE2_TIME and image_2.status == NOT_STARTED:
-            # keep track of start time/frame for later
-            image_2.tStart = t  # underestimates by a little under one frame
-            image_2.setAutoDraw(True)
-        elif image_2.status == STARTED and t >= (IMAGE2_TIME + (IMAGE_DURATION)): #most of one frame period left
-            image_2.setAutoDraw(False)
-
-        if not continueRoutine:  # a component has requested a forced-end of Routine
-            routineTimer.reset()  # if we abort early the non-slip timer needs reset
-            break
-
-        # refresh the screen
-        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-            win.flip()
-
-        if event.getKeys(keyList=[RESPONSE_KEY]):
-            thisExp.addData("keyPressed",RESPONSE_KEY)
-            thisExp.addData("keyRT",trialClock.getTime())
-        # check for quit (the Esc key)
-        if event.getKeys(keyList=["escape"]):
-            core.quit()
-            
-
     
     #-------Ending Routine "trial"-------
-    image_2.setAutoDraw(False)
+    fixation.setAutoDraw(False)
     win.flip()
     thisExp.nextEntry()
 core.wait(END_TRIAL_DELAY)
