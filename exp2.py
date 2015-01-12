@@ -39,7 +39,7 @@ expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 runNumber = int(expInfo['runNumber'])
 # Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
-filename = _thisDir + os.sep + 'data/%s_run%i_%s' %(expInfo['participant'], runNumber, expInfo['date'])
+filename = _thisDir + os.sep + 'data/%s_%s_run%i_%s' %(expInfo['participant'],expName, runNumber, expInfo['date'])
 
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
@@ -82,13 +82,13 @@ visual.TextStim(win=win, ori=0, name='text',
     depth=0.0)
 image = visual.ImageStim(win=win, name='image',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[8, 4],
+    ori=0, pos=[0, 0], size=[16, 4],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
 image_2 = visual.ImageStim(win=win, name='image_2',
     image='sin', mask=None,
-    ori=0, pos=[0,0], size=[8, 4],
+    ori=0, pos=[0,0], size=[16, 4],
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
@@ -154,7 +154,7 @@ for thisTrial in trials:
             image.tStart = t  # underestimates by a little under one frame
             fixation.setAutoDraw(False)
             image.setAutoDraw(True)
-        elif image.status == STARTED and t >= (IMAGE1_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
+        elif image.status == STARTED and t >= (IMAGE1_TIME + (IMAGE_DURATION)): #most of one frame period left
             image.setAutoDraw(False)
 
             # *image_2* updates
@@ -162,12 +162,16 @@ for thisTrial in trials:
             # keep track of start time/frame for later
             image_2.tStart = t  # underestimates by a little under one frame
             image_2.setAutoDraw(True)
-        elif image_2.status == STARTED and t >= (IMAGE2_TIME + (IMAGE_DURATION -win.monitorFramePeriod*0.75)): #most of one frame period left
+        elif image_2.status == STARTED and t >= (IMAGE2_TIME + (IMAGE_DURATION)): #most of one frame period left
             image_2.setAutoDraw(False)
 
         if not continueRoutine:  # a component has requested a forced-end of Routine
             routineTimer.reset()  # if we abort early the non-slip timer needs reset
             break
+
+        # refresh the screen
+        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
+            win.flip()
 
         if event.getKeys(keyList=[RESPONSE_KEY]):
             thisExp.addData("keyPressed",RESPONSE_KEY)
@@ -176,11 +180,11 @@ for thisTrial in trials:
         if event.getKeys(keyList=["escape"]):
             core.quit()
             
-        # refresh the screen
-        if continueRoutine:  # don't flip if this routine is over or we'll get a blank screen
-            win.flip()
+
     
     #-------Ending Routine "trial"-------
+    image_2.setAutoDraw(False)
+    win.flip()
     thisExp.nextEntry()
 core.wait(END_TRIAL_DELAY)
 win.close()
