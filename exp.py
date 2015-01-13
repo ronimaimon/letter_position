@@ -21,6 +21,7 @@ SCREEN_DISTANCE_IN_CM = 50
 SCREEN_RESOLUTION = (1440, 900)
 CONFIGURATION_FILE = u'Scripts\\exp1-run%d.csv'
 END_TRIAL_DELAY = 20
+BEGIN_TRIAL_DELAY = 12
 RESPONSE_KEY = 'b'
 BLOCK_DURATION = 12.0
 IMAGE4_TIME = 11.0
@@ -120,13 +121,13 @@ keys = event.getKeys(keyList=['T','t','escape'])
 event.waitKeys(['return'])
 globalClock.reset()
 routineTimer.reset()
-# routineTimer.add(BEGIN_TRIAL_DELAY)
+routineTimer.add(BEGIN_TRIAL_DELAY)
 text.setAutoDraw(False)
 win.flip()
 if('escape' in keys):
     core.quit()
-# while routineTimer.getTime() > 0:
-#     continue
+while routineTimer.getTime() > 0:
+    continue
 for thisTrial in trials:
     trialComponents = []
     trialComponents.append(image)
