@@ -21,7 +21,7 @@ SCREEN_DISTANCE_IN_CM = 50
 SCREEN_RESOLUTION = (1440, 900)
 CONFIGURATION_FILE = u'Scripts\\exp2-run%d.csv'
 END_TRIAL_DELAY = 20
-BEGIN_TRIAL_DELAY = 20
+BEGIN_TRIAL_DELAY = 2
 RESPONSE_KEY = 'b'
 BLOCK_DURATION = 4.0
 IMAGE2_TIME = 0.7
@@ -46,7 +46,7 @@ filename = _thisDir + os.sep + 'data/%s_%s_run%i_%s' %(expInfo['participant'],ex
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
     originPath=None,
-    savePickle=True, saveWideText=True,
+    savePickle=False, saveWideText=True,
     dataFileName=filename)
 #save a log file for detail verbose info
 logFile = logging.LogFile(filename+'.log', level=logging.EXP)
@@ -106,10 +106,10 @@ thisExp.addLoop(trials)  # add the loop to the experiment
 # set up handler to look after randomisation of conditions etc
 # while routineTimer.getTime() > 0:
 #     continue
-firstTrial = True
-for thisTrial in trials:
-    if(firstTrial):
-        firstTrial = False
+for i in range(trials.nTotal):
+    thisTrial = trials.next()
+    if(i==0):
+        print "here!"
         if thisTrial != None:
             for paramName in thisTrial.keys():
                 exec (paramName + '= thisTrial.' + paramName)
@@ -125,6 +125,7 @@ for thisTrial in trials:
         routineTimer.reset()
         routineTimer.add(BEGIN_TRIAL_DELAY)
         text.setAutoDraw(False)
+        # fixation.setAutoDraw(True)
         win.flip()
         if('escape' in keys):
             core.quit()
@@ -135,7 +136,6 @@ for thisTrial in trials:
     trialComponents.append(image_2)
     for thisComponent in trialComponents:
         thisComponent.status = NOT_STARTED
-
     t = 0
     #-------Start Routine "trial"-------
     continueRoutine = True
@@ -152,11 +152,23 @@ for thisTrial in trials:
             thisExp.addData("start",globalClock.getTime())
             fixation.setAutoDraw(True)
             win.flip()
+            if(i+1 < trials.nTotal):
+                print "here! 2 "
+                nextTrial = trials.getFutureTrial()
+                for paramName in nextTrial.keys():
+                    exec(paramName + '= nextTrial.' + paramName)
+                image.setImage(stim1)
+                image.pos = (0,randint(-1,1)*0.5)
+                if (stim2 != '' and stim2 != False):
+                    image_2.setImage(stim2)
+                    image_2.pos = (0,randint(-1,1)*0.5)
 
         if t >= IMAGE1_TIME and image.status == NOT_STARTED:
+
             thisExp.addData("start stim",globalClock.getTime())
             # keep track of start time/frame for later
             image.tStart = t  # underestimates by a little under one frame
+            # fixation.setAutoDraw(False)
             image.setAutoDraw(True)
             win.flip()
         elif image.status == STARTED and t >= (IMAGE1_TIME + (IMAGE_DURATION)): #most of one frame period left
@@ -182,20 +194,10 @@ for thisTrial in trials:
 
         if event.getKeys(keyList=[RESPONSE_KEY]):
             thisExp.addData("keyPressed",RESPONSE_KEY)
-            thisExp.addData("keyRT",trialClock.getTime())
+            thisExp.addData("keyRT",globalClock.getTime())
         # check for quit (the Esc key)
         if event.getKeys(keyList=["escape"]):
             core.quit()
-        if isFirstFrame and fixation.status == STARTED:
-            isFirstFrame = False
-            if thisTrial != None:
-                for paramName in thisTrial.keys():
-                    exec(paramName + '= thisTrial.' + paramName)
-            image.setImage(stim1)
-            image.pos = (0,randint(-1,1)*0.5)
-            if (stim2 != '' and stim2 != False):
-                image_2.setImage(stim2)
-                image_2.pos = (0,randint(-1,1)*0.5)
 
 
     
