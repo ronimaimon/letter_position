@@ -135,11 +135,11 @@ def cond_2():
         l1 = next_char_balanced(initials_distribution, "")
         l2 = next_char_balanced(middle_distribution, [l1, fs_matrix.get_max_column(l1)])
         l3 = u'ב'
-        l4 = next_char_balanced(endings_distribution, [l1, l2, st_matrix.get_max_column(l2)])
+        l4 = next_char_balanced(endings_distribution, [l1, l2, st_matrix.get_max_column(l2), ft_matrix.get_max_column(l1)])
 
         fs_matrix.add_value(l1, l2, 1)
         st_matrix.add_value(l2, l4, 1)
-
+        ft_matrix.add_value(l1, l4, 1)
         print u"{0}{1}{2}{3} {0}{2}{1}{3}".format(l1, l2, l3, l4)
 
     #print unicode(fs_matrix)
