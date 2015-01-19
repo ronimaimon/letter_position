@@ -49,7 +49,7 @@ filename = _thisDir + os.sep + 'data/%s_%s_run%i_%s' %(expInfo['participant'],ex
 thisExp = data.ExperimentHandler(name=expName, version='',
     extraInfo=expInfo, runtimeInfo=None,
     originPath=None,
-    savePickle=True, saveWideText=True,
+    savePickle=False, saveWideText=True,
     dataFileName=filename)
 #save a log file for detail verbose info
 logFile = logging.LogFile(filename+'.log', level=logging.EXP)
@@ -206,7 +206,7 @@ for thisTrial in trials:
 
         if event.getKeys(keyList=[RESPONSE_KEY]):
             thisExp.addData("keyPressed",RESPONSE_KEY)
-            thisExp.addData("keyRT",trialClock.getTime())
+            thisExp.addData("keyRT",globalClock.getTime())
         # check for quit (the Esc key)
         if event.getKeys(keyList=["escape"]):
             core.quit()
@@ -217,6 +217,9 @@ for thisTrial in trials:
     
     #-------Ending Routine "trial"-------
     thisExp.nextEntry()
+fixation.setAutoDraw(True)
+win.flip()
 core.wait(END_TRIAL_DELAY)
+fixation.setAutoDraw(False)
 win.close()
 core.quit()
