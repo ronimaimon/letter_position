@@ -15,10 +15,16 @@ from numpy import sin, cos, tan, log, log10, pi, average, sqrt, std, deg2rad, ra
 from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
 
-STIMULI_SIZE = [16, 4]
+#SCANNER PROPERTIES
+#SCREEN_DISTANCE_IN_CM = 120
+#SCREEN_RESOLUTION = (1920, 1080)
+#SCREEN_WIDTH_IN_CM = 29.5
+
 SCREEN_WIDTH_IN_CM = 29.5
 SCREEN_DISTANCE_IN_CM = 50
 SCREEN_RESOLUTION = (1440, 900)
+
+STIMULI_SIZE = [12, 3]
 CONFIGURATION_FILE = u'Scripts\\exp1-run%d.csv'
 END_TRIAL_DELAY = 20
 BEGIN_TRIAL_DELAY = 12
@@ -156,15 +162,15 @@ for thisTrial in trials:
                 for paramName in thisTrial.keys():
                     exec(paramName + '= thisTrial.' + paramName)
             image.setImage(stim1)
-            image.pos = (0,randint(-1,1)*0.5)
+            image.pos = (0,randint(-1,1)*0.25)
             if (stim2 != '' and stim2 != False):
                 image_2.setImage(stim2)
-                image_2.pos = (0,randint(-1,1)*0.5)
+                image_2.pos = (0,randint(-1,1)*0.25)
             if (stim3 != '' and stim3 != False):
                 image_3.setImage(stim3)
-                image_3.pos = (0,randint(-1,1)*0.5)
+                image_3.pos = (0,randint(-1,1)*0.25)
                 image_4.setImage(stim4)
-                image_4.pos = (0,randint(-1,1)*0.5)
+                image_4.pos = (0,randint(-1,1)*0.25)
 
 
         if t >= IMAGE1_TIME and image.status == NOT_STARTED:

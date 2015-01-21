@@ -14,11 +14,16 @@ import numpy as np  # whole numpy lib is available, prepend 'np.'
 from numpy import sin, cos, tan, log, log10, pi, average, sqrt, std, deg2rad, rad2deg, linspace, asarray
 from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
+#SCANNER PROPERTIES
+#SCREEN_DISTANCE_IN_CM = 120
+#SCREEN_RESOLUTION = (1920, 1080)
+#SCREEN_WIDTH_IN_CM = 29.5
 
-# Ensure that relative paths start from the same directory as this script
 SCREEN_WIDTH_IN_CM = 29.5
 SCREEN_DISTANCE_IN_CM = 50
-SCREEN_RESOLUTION = (1440, 900)
+SCREEN_RESOLUTION = (1920, 1080)
+
+STIMULI_SIZE = [12, 3]
 CONFIGURATION_FILE = u'Scripts\\exp2-run%d.csv'
 END_TRIAL_DELAY = 20
 BEGIN_TRIAL_DELAY = 2
@@ -71,25 +76,21 @@ text = visual.TextStim(win=win, ori=0, name='text',
     pos=[0, 0], height=1, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
-fixation = visual.TextStim(win=win, ori=0, name='text',
+fixation = visual.TextStim(win=win, ori=0, name='fixation',
     text='+',    font=u'Arial',
     pos=[0, 0], height=1, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
-visual.TextStim(win=win, ori=0, name='text',
-    text=u'The experiment will begin shortly',    font=u'Arial',
-    pos=[0, 0], height=1, wrapWidth=None,
-    color=u'white', colorSpace='rgb', opacity=1,
-    depth=0.0)
+
 image = visual.ImageStim(win=win, name='image',
     image='sin', mask=None,
-    ori=0, pos=[0, 0], size=[16, 4],
+    ori=0, pos=[0, 0], size=STIMULI_SIZE,
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
 image_2 = visual.ImageStim(win=win, name='image_2',
     image='sin', mask=None,
-    ori=0, pos=[0,0], size=[16, 4],
+    ori=0, pos=[0,0], size=STIMULI_SIZE,
     color=[1,1,1], colorSpace='rgb', opacity=1,
     flipHoriz=False, flipVert=False,
     interpolate=True, depth=-1.0)
@@ -114,9 +115,7 @@ for i in range(trials.nTotal):
             for paramName in thisTrial.keys():
                 exec (paramName + '= thisTrial.' + paramName)
             image.setImage(stim1)
-            image.pos = (0, randint(-1, 1) * 0.5)
             image_2.setImage(stim2)
-            image_2.pos = (0, randint(-1, 1) * 0.5)
         text.setAutoDraw(True)
         win.flip()
         keys = event.getKeys(keyList=['T','t','escape'])
@@ -125,7 +124,7 @@ for i in range(trials.nTotal):
         routineTimer.reset()
         routineTimer.add(BEGIN_TRIAL_DELAY)
         text.setAutoDraw(False)
-        # fixation.setAutoDraw(True)
+        fixation.setAutoDraw(True)
         win.flip()
         if('escape' in keys):
             core.quit()
@@ -149,26 +148,26 @@ for i in range(trials.nTotal):
         t = trialClock.getTime()
         # *ISI* period
         if t >= 1.4 and fixation.status == NOT_STARTED:
+            print "here! 2 "
             thisExp.addData("start",globalClock.getTime())
             fixation.setAutoDraw(True)
             win.flip()
             if(i+1 < trials.nTotal):
-                print "here! 2 "
+                print "here! 3 "
                 nextTrial = trials.getFutureTrial()
                 for paramName in nextTrial.keys():
                     exec(paramName + '= nextTrial.' + paramName)
                 image.setImage(stim1)
-                image.pos = (0,randint(-1,1)*0.5)
                 if (stim2 != '' and stim2 != False):
                     image_2.setImage(stim2)
-                    image_2.pos = (0,randint(-1,1)*0.5)
 
         if t >= IMAGE1_TIME and image.status == NOT_STARTED:
 
             thisExp.addData("start stim",globalClock.getTime())
             # keep track of start time/frame for later
             image.tStart = t  # underestimates by a little under one frame
-            # fixation.setAutoDraw(False)
+            fixation.setAutoDraw(False)
+            fixation.status = NOT_STARTED
             image.setAutoDraw(True)
             win.flip()
         elif image.status == STARTED and t >= (IMAGE1_TIME + (IMAGE_DURATION)): #most of one frame period left

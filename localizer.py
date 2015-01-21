@@ -14,12 +14,16 @@ import numpy as np  # whole numpy lib is available, prepend 'np.'
 from numpy import sin, cos, tan, log, log10, pi, average, sqrt, std, deg2rad, rad2deg, linspace, asarray
 from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
+#SCANNER PROPERTIES
+#SCREEN_DISTANCE_IN_CM = 120
+#SCREEN_RESOLUTION = (1920, 1080)
+#SCREEN_WIDTH_IN_CM = 29.5
 
-# Ensure that relative paths start from the same directory as this script
-STIMULI_SIZE = [16, 4]
 SCREEN_WIDTH_IN_CM = 29.5
 SCREEN_DISTANCE_IN_CM = 50
-SCREEN_RESOLUTION = (1440, 900)
+SCREEN_RESOLUTION = (1920, 1080)
+
+STIMULI_SIZE = [12, 3]
 CONFIGURATION_FILE = u'Scripts\\loc.csv'
 END_TRIAL_DELAY = 20
 BEGIN_TRIAL_DELAY = 20
@@ -215,6 +219,7 @@ for thisTrial in trials:
         if isFirstFrame and t >= 0.0:
             thisExp.addData("start",globalClock.getTime())
             fixation.setAutoDraw(True)
+            win.flip()
             isFirstFrame = False
             if thisTrial != None:
                 for paramName in thisTrial.keys():
