@@ -117,7 +117,7 @@ def next_char_balanced(distribution, not_allowed):
 
     return return_character
 
-def cond_2():
+def cond_2(words = []):
     initials_distribution = build_distribution(all_chars, u'שתמלנכ')
     middle_distribution   = build_distribution(all_chars, '')
     endings_distribution  = build_distribution(all_chars, u'תנמכצפ')
@@ -131,7 +131,7 @@ def cond_2():
     ft_matrix.build_matrix(all_chars, all_chars)
     combinations = {}
 
-    for i in xrange(300):
+    for i in xrange(160):
         l1 = next_char_balanced(initials_distribution, "")
         l2 = next_char_balanced(middle_distribution, [l1, fs_matrix.get_max_column(l1)])
         l3 = u'ב'
@@ -140,11 +140,31 @@ def cond_2():
         fs_matrix.add_value(l1, l2, 1)
         st_matrix.add_value(l2, l4, 1)
         ft_matrix.add_value(l1, l4, 1)
-        print u"{0}{1}{2}{3} {0}{2}{1}{3}".format(l1, l2, l3, l4)
-
+        words.append((u"{0}{1}{2}{3}".format(l1, l2, l3, l4),u"{0}{2}{1}{3}".format(l1, l2, l3, l4)))
     #print unicode(fs_matrix)
+words = []
+cond_2(words)
 
-cond_2()
+wordlist = set(open("..\wordlist\he1.txt" , "r").read().split("\n"))
+
+
+def sub_words_in_list(word):
+    global bigram1, bigram2, bigram3, trigram1, trigram2
+
+    bigram1 = word[:2].encode('utf-8')
+    bigram2 = word[1:3].encode('utf-8')
+    bigram3 = word[2:].encode('utf-8')
+    trigram1 = word[:3].encode('utf-8')
+    trigram2 = word[1:].encode('utf-8')
+    wordlist_intersection = wordlist.intersection([bigram1, bigram2, bigram3, trigram1, trigram2])
+    # for w in wordlist_intersection:
+    #     print w,
+    # print
+    return len(wordlist_intersection)
+
+
+for pair in words:
+    print u"%s %d %s %d" % (pair[0], sub_words_in_list(pair[0]), pair[1], sub_words_in_list(pair[1]))
 
 if __name__ == "main":
     m = Matrix()
