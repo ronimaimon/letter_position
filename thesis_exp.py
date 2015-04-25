@@ -3,6 +3,7 @@ import os, random, cPickle
 import csv
 from psychopy import gui
 from constants import *
+import glob
 os.chdir(os.path.dirname(__file__))
 expName = u'generate_sequences'  # from the Builder filename that created this script
 expInfo = {'participant':''}
@@ -20,21 +21,26 @@ class PWBlocks:
     def splitToRuns(self,runs=[]):
         random.shuffle(runs)
         all_blocks = []
+        names1 = []
+        names2 = []
         for root, dirs, files in os.walk(self.root, topdown=False):
             random.shuffle(files)
-
             for j in range(len(files)/self.block_len):
-                names1 = []
-                names2 = []
+                block1 = []
+                block2 = []
                 for i in range(self.block_len):
                     file_name = files.pop()
-                    names1.append(os.path.join(self.root,file_name))
-                    names2.append(os.path.join(self.second_root,file_name))
-                all_blocks.append(names1)
-                all_blocks.append(names2)
-        random.shuffle(all_blocks)
+                    while file_name.find("png") == -1:
+                        file_name = files.pop()
+                    block1.append(os.path.join(self.root,file_name))
+                    block2.append(os.path.join(self.second_root,file_name))
+                names1.append(block1)
+                names2.append(block2)
+        random.shuffle(names1)
+        random.shuffle(names2)
         for i in range(len(runs)):
-            runs[i] = runs[i]+ all_blocks[int(len(all_blocks)*((i+0.0)/len(runs))):int(len(all_blocks)*((i+1.0)/len(runs)))]
+            runs[i] = runs[i]+ names1[int(len(names1)*((i+0.0)/len(runs))):int(len(names1)*((i+1.0)/len(runs)))]
+            runs[i] = runs[i]+ names2[int(len(names2)*((i+0.0)/len(runs))):int(len(names2)*((i+1.0)/len(runs)))]
 
 
 class Triplets:
@@ -42,17 +48,23 @@ class Triplets:
         self.root = path
     def splitToRuns(self,runs=[]):
         types = ['base','sub','trans']
-        all_blocks = []
+        base = []
+        sub = []
+        trans = []
         for root, dirs, files in os.walk(self.root, topdown=False):
             for name in dirs:
-                random.shuffle(types)
                 path = os.path.join(root, name)
-                for i in range(len(types)):
-                    all_blocks.append([os.path.join(self.root,name,'base'+'.png'),(os.path.join(self.root,name,types[i]+'.png'))])
-        random.shuffle(all_blocks)
+                base.append([os.path.join(self.root,name,'base'+'.png'),(os.path.join(self.root,name,types[0]+'.png'))])
+                sub.append([os.path.join(self.root,name,'base'+'.png'),(os.path.join(self.root,name,types[1]+'.png'))])
+                trans.append([os.path.join(self.root,name,'base'+'.png'),(os.path.join(self.root,name,types[2]+'.png'))])
+        random.shuffle(base)
+        random.shuffle(sub)
+        random.shuffle(trans)
         for i in range(len(runs)):
-            print i ," from: ",len(all_blocks)*((i+0.0)/len(runs))," to: ",len(all_blocks)*((i+1.0)/len(runs))
-            runs[i] = runs[i]+ all_blocks[int(len(all_blocks)*((i+0.0)/len(runs))):int(len(all_blocks)*((i+1.0)/len(runs)))]
+            runs[i] = runs[i]+ base[int(len(base)*((i+0.0)/len(runs))):int(len(base)*((i+1.0)/len(runs)))]
+            runs[i] = runs[i]+ sub[int(len(sub)*((i+0.0)/len(runs))):int(len(sub)*((i+1.0)/len(runs)))]
+            runs[i] = runs[i]+ trans[int(len(trans)*((i+0.0)/len(runs))):int(len(trans)*((i+1.0)/len(runs)))]
+            random.shuffle(runs[i])
 
 
 class LocalizerBlocks:
@@ -71,6 +83,8 @@ class LocalizerBlocks:
                 names2 = []
                 for i in range(self.block_len):
                     file_name = files.pop()
+                    while file_name.find("png") == -1:
+                        file_name = files.pop()
                     names1.append(os.path.join(self.root,file_name))
                     names2.append(os.path.join(self.second_root,file_name))
                 all_blocks.append(names1)
@@ -84,8 +98,8 @@ def generateMVPARuns():
     z2 = PWBlocks(os.path.join( 'stimuli', 'Z2'), os.path.join('stimuli', 'Z3'), 4)
     runs = [[], [],[],[]]
     z2.splitToRuns(runs)
-    catch_trials = os.listdir(os.path.join('stimuli', 'Catch'))
-    catch_trials = map(lambda file: os.path.join('stimuli', 'Catch',file),catch_trials)
+    catch_trials = glob.glob(os.path.join('stimuli', 'Catch','*.png'))
+    # catch_trials = map(lambda file: os.path.join('stimuli', 'Catch',file),catch_trials)
     random.shuffle(catch_trials)
     for run in runs:
         random.shuffle(run)
@@ -120,6 +134,7 @@ def generateMVPARuns():
                 tr_file.write("%d\t%d\tZ3\r\n" %(tr,tr+5))
             tr+=6
         i+=1
+        tr_file.write("%d\t%d\tREST\r\n" %(tr,tr+END_TRIAL_DELAY/2))
         tr_file.close()
 
 
@@ -141,10 +156,10 @@ def generateLocalizerRun():
     for trial in run:
         all = "".join(trial)
         if all.find("FF") >0:
-            tr_file.write("%d\t%d\tREST\r\n" %(tr,tr-5))
+            tr_file.write("%d\t%d\tREST\r\n" %(tr,tr+5))
             tr_file.write("%d\t%d\tFF\r\n" %(tr+6,tr+11))
         else:
-            tr_file.write("%d\t%d\tREST\r\n" %(tr,tr-5))
+            tr_file.write("%d\t%d\tREST\r\n" %(tr,tr+5))
             tr_file.write("%d\t%d\tLANG\r\n" %(tr+6,tr+11))
         tr+=12
     tr_file.close()
@@ -153,7 +168,6 @@ def generateTriplets():
     runs = [[], [],[],[]]
     t = Triplets(os.path.join('stimuli','Triplets'))
     t.splitToRuns(runs)
-    print runs
     catch_trials = os.listdir(os.path.join('stimuli', 'Catch'))
     catch_trials = map(lambda file: os.path.join('stimuli', 'Catch',file),catch_trials)
     random.shuffle(catch_trials)
@@ -177,7 +191,7 @@ def generateTriplets():
     i=0
     for run in runs:
         tr_file = open(os.path.join(data_path,'exp2-run' + str(i + 1) + '-TRs.txt'), 'wb')
-        tr = BEGIN_TRIAL_DELAY/2 + 3
+        tr = BEGIN_TRIAL_DELAY/2 +3
         tr_file.write("%d\t%d\tREST\r\n" %(1,tr-1))
         for trial in run:
             all = "".join(trial)
@@ -191,6 +205,7 @@ def generateTriplets():
                 tr_file.write("%d\t%d\tSAME\r\n" %(tr,tr+1))
             tr+=2
         i+=1
+        tr_file.write("%d\t%d\tREST\r\n" %(tr,tr+END_TRIAL_DELAY/2))
         tr_file.close()
 
 
