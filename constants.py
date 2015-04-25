@@ -1,10 +1,10 @@
 __author__ = 'Roni'
 
-MRI = False
+MRI = True
 if(MRI):
     SCREEN_DISTANCE_IN_CM = 120
     SCREEN_RESOLUTION = (1920, 1080)
-    SCREEN_WIDTH_IN_CM = 29.5
+    SCREEN_WIDTH_IN_CM = 71
 else:
     SCREEN_WIDTH_IN_CM = 29.5
     SCREEN_DISTANCE_IN_CM = 50
