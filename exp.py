@@ -72,7 +72,7 @@ text = visual.TextStim(win=win, ori=0, name='text',
     depth=0.0)
 fixation = visual.TextStim(win=win, ori=0, name='text',
     text='+',    font=u'Arial',
-    pos=[0, 0], height=0.5, wrapWidth=None,
+    pos=[0, 0], height=1, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
 

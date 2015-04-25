@@ -186,7 +186,6 @@ def generateTriplets():
         wr = csv.writer(file, quoting=csv.QUOTE_MINIMAL)
         wr.writerow(header)
         wr.writerows(runs[i])
-        print runs[i]
         file.close()
     i=0
     for run in runs:
