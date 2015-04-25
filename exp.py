@@ -14,21 +14,11 @@ import numpy as np  # whole numpy lib is available, prepend 'np.'
 from numpy import sin, cos, tan, log, log10, pi, average, sqrt, std, deg2rad, rad2deg, linspace, asarray
 from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
+from constants import *
 
-#SCANNER PROPERTIES
-#SCREEN_DISTANCE_IN_CM = 120
-#SCREEN_RESOLUTION = (1920, 1080)
-#SCREEN_WIDTH_IN_CM = 29.5
 
-SCREEN_WIDTH_IN_CM = 29.5
-SCREEN_DISTANCE_IN_CM = 50
-SCREEN_RESOLUTION = (1440, 900)
+CONFIGURATION_FILE = u'data\\%s\\exp1-run%d.csv'
 
-STIMULI_SIZE = [12, 3]
-CONFIGURATION_FILE = u'Scripts\\exp1-run%d.csv'
-END_TRIAL_DELAY = 20
-BEGIN_TRIAL_DELAY = 12
-RESPONSE_KEY = 'b'
 BLOCK_DURATION = 12.0
 IMAGE4_TIME = 11.0
 IMAGE3_TIME = 10.0
@@ -49,7 +39,7 @@ expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 runNumber = int(expInfo['runNumber'])
 # Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
-filename = _thisDir + os.sep + 'data/%s_%s_run%i_%s' %(expInfo['participant'],expName, runNumber, expInfo['date'])
+filename = _thisDir + os.sep + 'data/%s/%s_run%i_%s' %(expInfo['participant'],expName, runNumber, expInfo['date'])
 
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
@@ -63,8 +53,8 @@ logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a f
 # Setup the Window
 mon = monitors.Monitor(name='my-monitor',distance=SCREEN_DISTANCE_IN_CM,width=SCREEN_WIDTH_IN_CM)
 mon.setSizePix(SCREEN_RESOLUTION)
-win = visual.Window(fullscr=True, screen=0, allowGUI=False, allowStencil=False,
-    monitor=mon, color=[0,0,0], colorSpace='rgb',
+win = visual.Window(SCREEN_RESOLUTION,fullscr=True, screen=0, allowGUI=False, allowStencil=False,
+    monitor=mon, color=[-1,-1,-1], colorSpace='rgb',
     blendMode='avg', useFBO=True, units='deg'
     )
 # store frame rate of monitor if we can measure it successfully
@@ -76,13 +66,13 @@ expInfo['frameRate']= REFRESH_RATE#win.getActualFrameRate()
 trialClock = core.Clock()
 
 text = visual.TextStim(win=win, ori=0, name='text',
-    text=u'The experiment will begin shortly',    font=u'Arial',
+    text=u'.......',    font=u'Arial',
     pos=[0, 0], height=1, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
 fixation = visual.TextStim(win=win, ori=0, name='text',
     text='+',    font=u'Arial',
-    pos=[0, 0], height=1, wrapWidth=None,
+    pos=[0, 0], height=0.5, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
 
@@ -115,9 +105,10 @@ globalClock = core.Clock()  # to track the time since experiment started
 routineTimer = core.CountdownTimer()  # to track time remaining of each (non-slip) routine 
 logging.setDefaultClock(globalClock)
 #------Prepare to start Routine "inst"-------
+print CONFIGURATION_FILE % (expInfo['participant'],runNumber)
 trials = data.TrialHandler(nReps=1, method='sequential',
     extraInfo=expInfo, originPath=None,
-    trialList=data.importConditions(CONFIGURATION_FILE % runNumber),
+    trialList=data.importConditions(CONFIGURATION_FILE % (expInfo['participant'],runNumber)),
     name='trials')
 thisExp.addLoop(trials)  # add the loop to the experiment
 # set up handler to look after randomisation of conditions etc

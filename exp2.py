@@ -14,20 +14,9 @@ import numpy as np  # whole numpy lib is available, prepend 'np.'
 from numpy import sin, cos, tan, log, log10, pi, average, sqrt, std, deg2rad, rad2deg, linspace, asarray
 from numpy.random import random, randint, normal, shuffle
 import os  # handy system and path functions
-#SCANNER PROPERTIES
-#SCREEN_DISTANCE_IN_CM = 120
-#SCREEN_RESOLUTION = (1920, 1080)
-#SCREEN_WIDTH_IN_CM = 29.5
+from constants import *
 
-SCREEN_WIDTH_IN_CM = 29.5
-SCREEN_DISTANCE_IN_CM = 50
-SCREEN_RESOLUTION = (1920, 1080)
-
-STIMULI_SIZE = [12, 3]
-CONFIGURATION_FILE = u'Scripts\\exp2-run%d.csv'
-END_TRIAL_DELAY = 20
-BEGIN_TRIAL_DELAY = 2
-RESPONSE_KEY = 'b'
+CONFIGURATION_FILE = u'data\\%s\\exp2-run%d.csv'
 BLOCK_DURATION = 4.0
 IMAGE2_TIME = 0.7
 IMAGE_DURATION = 0.3
@@ -45,7 +34,7 @@ expInfo['date'] = data.getDateStr()  # add a simple timestamp
 expInfo['expName'] = expName
 runNumber = int(expInfo['runNumber'])
 # Data file name stem = absolute path + name; later add .psyexp, .csv, .log, etc
-filename = _thisDir + os.sep + 'data/%s_%s_run%i_%s' %(expInfo['participant'],expName, runNumber, expInfo['date'])
+filename = _thisDir + os.sep + 'data/%s/%s_run%i_%s' %(expInfo['participant'],expName, runNumber, expInfo['date'])
 
 # An ExperimentHandler isn't essential but helps with data saving
 thisExp = data.ExperimentHandler(name=expName, version='',
@@ -59,8 +48,8 @@ logging.console.setLevel(logging.WARNING)  # this outputs to the screen, not a f
 # Setup the Window
 mon = monitors.Monitor(name='my-monitor',distance=SCREEN_DISTANCE_IN_CM,width=SCREEN_WIDTH_IN_CM)
 mon.setSizePix(SCREEN_RESOLUTION)
-win = visual.Window(fullscr=True, screen=0, allowGUI=False, allowStencil=False,
-    monitor=mon, color=[0,0,0], colorSpace='rgb',
+win = visual.Window(SCREEN_RESOLUTION,fullscr=True, screen=0, allowGUI=False, allowStencil=False,
+    monitor=mon, color=[-1,-1,-1], colorSpace='rgb',
     blendMode='avg', useFBO=True, units='deg'
     )
 # store frame rate of monitor if we can measure it successfully
@@ -72,13 +61,13 @@ expInfo['frameRate']= REFRESH_RATE#win.getActualFrameRate()
 trialClock = core.Clock()
 
 text = visual.TextStim(win=win, ori=0, name='text',
-    text=u'The experiment will begin shortly',    font=u'Arial',
+    text=u'.......',    font=u'Arial',
     pos=[0, 0], height=1, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
 fixation = visual.TextStim(win=win, ori=0, name='fixation',
     text='+',    font=u'Arial',
-    pos=[0, 0], height=1, wrapWidth=None,
+    pos=[0, 0], height=0.5, wrapWidth=None,
     color=u'white', colorSpace='rgb', opacity=1,
     depth=0.0)
 
@@ -101,7 +90,7 @@ logging.setDefaultClock(globalClock)
 #------Prepare to start Routine "inst"-------
 trials = data.TrialHandler(nReps=1, method='sequential',
     extraInfo=expInfo, originPath=None,
-    trialList=data.importConditions(CONFIGURATION_FILE % runNumber),
+    trialList=data.importConditions(CONFIGURATION_FILE % (expInfo['participant'],runNumber)),
     name='trials')
 thisExp.addLoop(trials)  # add the loop to the experiment
 # set up handler to look after randomisation of conditions etc
@@ -110,7 +99,6 @@ thisExp.addLoop(trials)  # add the loop to the experiment
 for i in range(trials.nTotal):
     thisTrial = trials.next()
     if(i==0):
-        print "here!"
         if thisTrial != None:
             for paramName in thisTrial.keys():
                 exec (paramName + '= thisTrial.' + paramName)
@@ -122,7 +110,7 @@ for i in range(trials.nTotal):
         event.waitKeys(['return'])
         globalClock.reset()
         routineTimer.reset()
-        routineTimer.add(BEGIN_TRIAL_DELAY)
+        routineTimer.add(BEGIN_TRIAL_DELAY+4)
         text.setAutoDraw(False)
         fixation.setAutoDraw(True)
         win.flip()
@@ -148,12 +136,10 @@ for i in range(trials.nTotal):
         t = trialClock.getTime()
         # *ISI* period
         if t >= 1.4 and fixation.status == NOT_STARTED:
-            print "here! 2 "
             thisExp.addData("start",globalClock.getTime())
             fixation.setAutoDraw(True)
             win.flip()
             if(i+1 < trials.nTotal):
-                print "here! 3 "
                 nextTrial = trials.getFutureTrial()
                 for paramName in nextTrial.keys():
                     exec(paramName + '= nextTrial.' + paramName)
