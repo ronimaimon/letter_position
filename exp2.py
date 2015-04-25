@@ -177,7 +177,7 @@ for i in range(trials.nTotal):
             routineTimer.reset()  # if we abort early the non-slip timer needs reset
             break
 
-        if event.getKeys(keyList=[RESPONSE_KEY]):
+        if event.getKeys(keyList=RESPONSE_KEY):
             thisExp.addData("keyPressed",RESPONSE_KEY)
             thisExp.addData("keyRT",globalClock.getTime())
         # check for quit (the Esc key)

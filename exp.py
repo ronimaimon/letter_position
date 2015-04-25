@@ -201,7 +201,7 @@ for thisTrial in trials:
             routineTimer.reset()  # if we abort early the non-slip timer needs reset
             break
 
-        if event.getKeys(keyList=[RESPONSE_KEY]):
+        if event.getKeys(keyList=RESPONSE_KEY):
             thisExp.addData("keyPressed",RESPONSE_KEY)
             thisExp.addData("keyRT",globalClock.getTime())
         # check for quit (the Esc key)
@@ -213,10 +213,15 @@ for thisTrial in trials:
             win.flip()
     
     #-------Ending Routine "trial"-------
+
     thisExp.nextEntry()
 fixation.setAutoDraw(True)
 win.flip()
-core.wait(END_TRIAL_DELAY)
+routineTimer.add(END_TRIAL_DELAY)
+while routineTimer.getTime() > 0:
+    continue
+print "here"
 fixation.setAutoDraw(False)
+win.flip()
 win.close()
 core.quit()
