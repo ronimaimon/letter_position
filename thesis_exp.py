@@ -127,11 +127,11 @@ def generateMVPARuns():
         for trial in run:
             all = "".join(trial)
             if all.find("Catch") >0:
-                tr_file.write("%d\t%d\tCATCH\r\n" %(tr,tr+5))
+                tr_file.write("%d\t%d\tCATCH\r\n" %(tr,tr+1))
             elif all.find("Z2")>0:
-                tr_file.write("%d\t%d\tZ2\r\n" %(tr,tr+5))
+                tr_file.write("%d\t%d\tZ2\r\n" %(tr,tr+1))
             else:
-                tr_file.write("%d\t%d\tZ3\r\n" %(tr,tr+5))
+                tr_file.write("%d\t%d\tZ3\r\n" %(tr,tr+1))
             tr+=6
         i+=1
         tr_file.write("%d\t%d\tREST\r\n" %(tr,tr+END_TRIAL_DELAY/2))
@@ -195,13 +195,13 @@ def generateTriplets():
         for trial in run:
             all = "".join(trial)
             if all.find("Catch") >0:
-                tr_file.write("%d\t%d\tCATCH\r\n" %(tr,tr+1))
+                tr_file.write("%d\t%d\tCATCH\r\n" %(tr,tr))
             elif all.find("sub") >0:
-                tr_file.write("%d\t%d\tSUBS\r\n" %(tr,tr+1))
+                tr_file.write("%d\t%d\tSUBS\r\n" %(tr,tr))
             elif all.find("trans")>0:
-                tr_file.write("%d\t%d\tTRANS\r\n" %(tr,tr+1))
+                tr_file.write("%d\t%d\tTRANS\r\n" %(tr,tr))
             else:
-                tr_file.write("%d\t%d\tSAME\r\n" %(tr,tr+1))
+                tr_file.write("%d\t%d\tSAME\r\n" %(tr,tr))
             tr+=2
         i+=1
         tr_file.write("%d\t%d\tREST\r\n" %(tr,tr+END_TRIAL_DELAY/2))

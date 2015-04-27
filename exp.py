@@ -27,7 +27,8 @@ IMAGE_DURATION = 0.8
 IMAGE1_TIME = 8.0
 REFRESH_RATE = 60
 # Ensure that relative paths start from the same directory as this script
-_thisDir = os.path.dirname(os.path.abspath(__file__))
+_thisDir = os.path.dirname(os.path.abspath( __file__))
+
 os.chdir(_thisDir)
 
 # Store info about the experiment 
